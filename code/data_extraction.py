@@ -89,13 +89,11 @@ if __name__ == "__main__":
         final_df = pd.concat(all_dfs, ignore_index=True)
         missing_count = final_df['Export_Value_USD'].isna().sum()
 
-        # --- ABSOLUTE PATH FIX (MUTLAK YOL DÜZELTMESİ) ---
-        # Bu kısım terminali nerede açtığından bağımsız olarak ANA PROJE DİZİNİNİ bulur.
-        script_dir = os.path.dirname(os.path.abspath(__file__))  # code klasörünün yolu
-        project_root = os.path.dirname(script_dir)  # Ana proje klasörünün yolu
-        target_dir = os.path.join(project_root, 'original_data')  # original_data klasörünün tam yolu
 
-        # original_data klasörü var mı kontrol et, yoksa güvenli olması açısından oluştur
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(script_dir)
+        target_dir = os.path.join(project_root, 'original_data')
+
         os.makedirs(target_dir, exist_ok=True)
 
         file_path = os.path.join(target_dir, 'imf_dots_sample.csv')
@@ -112,7 +110,7 @@ if __name__ == "__main__":
             print(final_df.head(10))
             print("\nNext Step: Iteration 03 - code/preprocessing.py")
         except Exception as e:
-            print(f"\n[ERROR] Could not save the file: {e}")
+            print(f"\n[ERROR] Could not save the file: {e}")            
 
     else:
         print("\n[ERROR] No data could be fetched from IMF API.")
