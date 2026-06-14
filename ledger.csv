@@ -1,11 +1,11 @@
 Iteration,Date,Task_Description,Owner,Associated_File,Status
 01,2026-05-25,Repository Setup Folder Framework and Initial README Drafting,Kaan,readme.md,Completed
 02,2026-06-14,UN Comtrade and IMF DOTS API Integration and Raw Data Fetching,Kaan,code/data_extraction.py,Completed
-03,2026-??-??,Missing Value Handling Log Transformation and Scaler Pipeline Design,Coder_2,code/preprocessing.py,Planned
-04,2026-??-??,Baseline Model Execution PCA and K-Means Cluster Assignment,Coder_1,code/baseline_kmeans.ipynb,Planned
-05,2026-??-??,Qualitative Assessment of K-Means Geometric and Boundary Flaws,Domain_1,docs/kmeans_critique.md,Planned
-06,2026-??-??,Hierarchical Clustering Distance Metric Justification Matrix,Domain_2,docs/distance_metrics.md,Planned
-07,2026-??-??,Agglomerative Hierarchical Clustering Execution and Dendrogram Plotting,Coder_2,code/hierarchical.ipynb,Planned
-08,2026-??-??,Dendrogram Parsing for Tax Havens and Hyper-Dependent Supply Nodes,Domain_1,docs/outlier_analysis.md,Planned
-09,2026-??-??,V&V Master Data Merging and Cross-Tabulation Alignment Matrix,Domain_2,code/validation.ipynb,Planned
-10,2026-??-??,Concept Drift Quantification via ARI and NMI for 2018 and 2022 Cutoffs,Both,code/drift_analysis.ipynb,Planned
+03,2026-06-14,Missing Value Handling Log Transformation and Scaler Pipeline Design,Kaan,code/preprocessing.py,Completed
+04,2026-??-??,Baseline Model Execution PCA and K-Means Cluster Assignment,Kaan,code/baseline_kmeans.py,Completed
+05,2026-??-??,Qualitative Assessment of K-Means Geometric and Boundary Flaws,?,docs/kmeans_critique.md,Planned
+06,2026-??-??,Hierarchical Clustering Distance Metric Justification Matrix,?,docs/distance_metrics.md,Planned
+07,2026-??-??,Agglomerative Hierarchical Clustering Execution and Dendrogram Plotting,?,code/hierarchical.py,Planned
+08,2026-??-??,Dendrogram Parsing for Tax Havens and Hyper-Dependent Supply Nodes,?,docs/outlier_analysis.md,Planned
+09,2026-??-??,V&V Master Data Merging and Cross-Tabulation Alignment Matrix,?,code/validation.py,Planned
+10,2026-??-??,Concept Drift Quantification via ARI and NMI for 2018 and 2022 Cutoffs,?,code/drift_analysis.py,Planned

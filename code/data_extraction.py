@@ -8,7 +8,7 @@ def fetch_imf_imts_real_data(reporter_iso3, partner_iso3, start_year, end_year):
     """
     Fetches real trade data using the latest IMF API v2 (IMTS) infrastructure.
     """
-    print(f"Fetching data via New IMF API: {reporter_iso3} -> {partner_iso3} ({start_year}-{end_year})")
+    print(f"Fetching data: {reporter_iso3} -> {partner_iso3} ({start_year}-{end_year})")
 
     base_url = "https://api.imf.org/external/sdmx/2.1/data/IMTS"
     dimensions = f"{reporter_iso3}.XG_FOB_USD.{partner_iso3}.A"
@@ -21,10 +21,8 @@ def fetch_imf_imts_real_data(reporter_iso3, partner_iso3, start_year, end_year):
         response = requests.get(url, params=params, headers=headers, timeout=20)
 
         if response.status_code == 400:
-            print(f"Warning: Bad API Request (400 Bad Request) - URL: {response.url}")
             return pd.DataFrame()
         elif response.status_code == 404:
-            print(f"Warning: Series {reporter_iso3}-{partner_iso3} not found on IMF server (404).")
             return pd.DataFrame()
 
         response.raise_for_status()
@@ -73,46 +71,40 @@ if __name__ == "__main__":
     START_YEAR = "2015"
     END_YEAR = "2023"
 
-    reporter = "USA"
-    partners = ["CHN", "DEU", "MEX", "CAN", "RUS"]
+    reporters = ["USA", "CHN", "DEU", "JPN", "GBR", "FRA", "IND"]
+    partners = ["CHN", "DEU", "MEX", "CAN", "RUS", "USA", "JPN"]
 
     all_dfs = []
 
-    for partner in partners:
-        df = fetch_imf_imts_real_data(reporter_iso3=reporter, partner_iso3=partner, start_year=START_YEAR,
-                                      end_year=END_YEAR)
-        if not df.empty:
-            all_dfs.append(df)
-        time.sleep(1.5)
+    for reporter in reporters:
+        for partner in partners:
+            if reporter == partner:
+                continue
+
+            df = fetch_imf_imts_real_data(reporter_iso3=reporter, partner_iso3=partner, start_year=START_YEAR,
+                                          end_year=END_YEAR)
+
+            if df is not None and not df.empty:
+                all_dfs.append(df)
+            time.sleep(1.5)
 
     if all_dfs:
         final_df = pd.concat(all_dfs, ignore_index=True)
-        missing_count = final_df['Export_Value_USD'].isna().sum()
 
-        # --- ABSOLUTE PATH FIX (MUTLAK YOL DÜZELTMESİ) ---
-        # Bu kısım terminali nerede açtığından bağımsız olarak ANA PROJE DİZİNİNİ bulur.
-        script_dir = os.path.dirname(os.path.abspath(__file__))  # code klasörünün yolu
-        project_root = os.path.dirname(script_dir)  # Ana proje klasörünün yolu
-        target_dir = os.path.join(project_root, 'original_data')  # original_data klasörünün tam yolu
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(script_dir)
+        target_dir = os.path.join(project_root, 'original_data')
 
-        # original_data klasörü var mı kontrol et, yoksa güvenli olması açısından oluştur
         os.makedirs(target_dir, exist_ok=True)
-
         file_path = os.path.join(target_dir, 'imf_dots_sample.csv')
 
         try:
             final_df.to_csv(file_path, index=False)
             print("\n" + "=" * 50)
             print(f"[SUCCESS] Real IMF Data Downloaded and Saved Successfully!")
-            print(f"Absolute Saved Path: {os.path.abspath(file_path)}")
             print(f"Total Row Count: {len(final_df)}")
-            print(f"Missing (NaN) Value Count: {missing_count}")
             print("=" * 50)
-            print("\nFirst 10 rows preview:")
-            print(final_df.head(10))
-            print("\nNext Step: Iteration 03 - code/preprocessing.py")
         except Exception as e:
             print(f"\n[ERROR] Could not save the file: {e}")
-
     else:
         print("\n[ERROR] No data could be fetched from IMF API.")
