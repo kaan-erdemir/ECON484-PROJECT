@@ -9,7 +9,7 @@ The problem is structured as a two-stage unsupervised learning and alignment ana
 **Stage 1: Supply Chain Regime Discovery (Unsupervised Clustering)**
 $$C = f(X_{\text{trade}})$$
 
-* **Inputs ($X_{\text{trade}}$):** High-dimensional feature matrix containing country-level import/export dependency matrices, commodity concentrations (Herfindahl-Hirschman Index), and weighted tariff structures.
+* **Inputs ($X_{\text{trade}}$):** High-dimensional feature matrix containing country-level bilateral macro export and import volumes spanning historical vectors.
 * **ML Task:** Unsupervised Clustering.
 * **Output ($C$):** Categorical vector of discrete cluster assignments representing the natural "Supply Chain Regime" for each economy.
 
@@ -17,19 +17,18 @@ $$C = f(X_{\text{trade}})$$
 $$\Delta = g(C, V_{\text{macro}})$$
 
 * **Inputs ($V_{\text{macro}}$):** Independent macroeconomic external vulnerability metrics (Debt-to-GDP ratios, Current Account Deficit-to-GDP ratios, Sovereign Credit Ratings).
-* **Output ($\Delta$):** Structural misalignment matrix calculated via cross-tabulation and distance-to-centroid deviations, serving as an early-warning signal for future economic or supply shocks ($Y_{\text{shock}}$).
+* **Output ($\\Delta$):** Structural misalignment matrix calculated via cross-tabulation and distance-to-centroid deviations, serving as an early-warning signal for future economic or supply shocks ($Y_{\text{shock}}$).
 
 ---
 
 ## 2. Input Data Description
-* **Origin:** UN Comtrade API (covering global direct bilateral trade flows) supplemented by the IMF Direction of Trade Statistics (DOTS).
+* **Origin:** IMF Direction of Trade Statistics (DOTS) API, covering aggregate macro-level global direct bilateral trade flows. (Note: UN Comtrade API was scoped out during development to mitigate hyper-sparsity and maintain strict macroeconomic regime boundaries).
 * **Key Fields / Columns:**
-  * `Reporter_Code` / `Partner_Code`: ISO country identifiers.
-  * `Commodity_Code`: HS (Harmonized System) 2-digit or 4-digit product classifications.
-  * `Trade_Value_USD`: Total annual financial volume of the specific trade flow.
-  * `Tariff_Structure`: Effectively applied weighted average tariff rates per country pair.
-* **Known Data Issues:** * Asymmetric reporting anomalies (e.g., Country A reports exporting $10M to Country B, but Country B reports importing $12M from Country A).
-  * Extreme zero-inflation and matrix sparsity due to the absence of direct trading relationships between smaller economies.
+  * `Reporter`: ISO country identifiers for reporting economies.
+  * `Partner`: ISO country identifiers for counterparty destination economies.
+  * `Year`: Annual temporal tracker (2015-2023).
+  * `Export_Value_USD_Scaled`: Log-transformed and standardized financial volume of the specific trade flow.
+* **Known Data Issues:** Asymmetric reporting anomalies (e.g., Country A reports exporting $10M to Country B, but Country B reports importing $12M from Country A).
 
 ---
 
@@ -45,7 +44,7 @@ $$\Delta = g(C, V_{\text{macro}})$$
 
 ## 4. Methods to Be Used
 * **Baseline Model:** Principal Component Analysis (PCA) for dimensionality reduction, followed by **K-Means Clustering**.
-  * *Validation Metrics:* Silhouette Score and the Elbow Method (Within-Cluster Sum of Squares).
+  * *Validation Metrics:* Silhouette Score and Qualitative Boundary Assessment.
 * **Primary Model:** **Agglomerative Hierarchical Clustering**. This method is selected because trade blocs possess inherent nested structures (e.g., regional trade pacts operating inside global networks) which are best captured via Dendrogram analysis.
   * *Distance Metrics to Evaluate:* Euclidean, Manhattan, and Cosine distances.
   * *Linkage Criteria:* Ward's linkage (variance minimization) and Complete linkage.
@@ -54,7 +53,7 @@ $$\Delta = g(C, V_{\text{macro}})$$
 ---
 
 ## 5. Expected Outputs & Interpretation
-1. **Discrete Cluster IDs:** Categorical regime assignments for each economy (e.g., "High-Tech Component Hubs", "Primary Commodity Exporters", "Tax Haven Nodes").
+1. **Discrete Cluster IDs:** Categorical regime assignments for each economy (e.g., "Isolated Hegemon Sink", "The Industrial Production Engines", "Balanced Regional Hubs").
 2. **Dendrogram Visualizations:** Tree diagrams highlighting the exact thresholds where regional trade agreements merge into broader geopolitical economic blocs.
 3. **Misalignment Scores ($\Delta$):** Deviation rankings highlighting countries with high discrepancies between trade network resilience and sovereign default risk.
 
@@ -65,10 +64,10 @@ $$\Delta = g(C, V_{\text{macro}})$$
   1. **2018 (The US-China Tariff Escalation):** Marks the shift from peak global integration to protectionist decoupling.
   2. **2022 (The Russia-Ukraine War & Post-COVID Bottlenecks):** Marks the acceleration of "friend-shoring" and the weaponization of commodity supply chains.
   * *Quantification:* Models will be trained on pre-2018 data, projected onto 2022 data, and evaluated using the **Adjusted Rand Index (ARI)** and **Normalized Mutual Information (NMI)**. A sharp decline in ARI validates the presence of structural policy drift.
-* **Statistical Risks:** High-dimensional trade matrices introduce the "Curse of Dimensionality", which can homogenize Euclidean distances. K-Means also assumes spherical cluster geometry, which fails to capture the elongated, hub-and-spoke topology of global supply chains.
+* **Statistical Risks:** High-dimensional trade matrices introduce the "Curse of Dimensionality", which can homogenize Euclidean distances. K-Means also assumes spherical cluster geometry, which fails to capture the elongated, corridor topology of global supply chains.
 
 ---
 
 ## 7. Specific Notes & Preprocessing Pipeline
-* **Prior Quality Checks:** Missing value heatmaps and distribution skewness testing across commodity trades.
-* **Data Transformations:** Trade volumes are heavily right-skewed; a $\log(1 + x)$ transformation will be applied to normalize data while preserving zero-trade matrices. All features will be scaled using `StandardScaler` or `MinMaxScaler` to prevent high-value primary commodities (like crude oil) from mathematically overwhelming low-volume but highly critical components (like semiconductor machinery).
+* **Prior Quality Checks:** Missing value checks and distribution skewness testing across macro trade lines.
+* **Data Transformations:** Trade volumes are heavily right-skewed; a $\log(1 + x)$ transformation will be applied to normalize data while preserving zero-trade matrices. All features will be scaled using `StandardScaler` to prevent extreme baseline variances from mathematically overwhelming the distance metrics.
