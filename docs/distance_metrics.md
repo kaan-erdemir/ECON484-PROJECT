@@ -15,7 +15,7 @@ The following visualization and matrix summarize the real-world mathematical fid
 
 *Figure 1: Empirical comparison of mathematical combinations. The green bar indicates our optimal selection, while the red bar highlights the severe failure of the variance-minimization constraint.*
 
-### 📋 Metric Comparison Table
+###  Metric Comparison Table
 
 | Distance Metric | Linkage Criterion | Cophenetic Correlation Coefficient ($r$) | Empirical Assessment & Fit |
 | :--- | :--- | :--- | :--- |
