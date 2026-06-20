@@ -1,50 +1,27 @@
-## Overview
-This document serves as a historical record of the AI-assisted development process for the "Global Supply Chain Regimes" clustering project. It tracks the pipeline iterations, engineering decisions, errors encountered, and debugging steps from project inception to the successful execution of the baseline machine learning model.
+# AI Prompt History
 
----
+This document contains a summary of interactions with Large Language Models (LLMs - Gemini) for architectural setup, debugging, and empirical model optimization during the "Global Supply Chain Regimes" clustering project. The prompts were designed following the "context, task, and format" framework to maximize the efficiency and accuracy of the AI's outputs.
 
-## Iteration 01: Project Architecture & Ledger
-* **Objective:** Prevent version control chaos and separate raw data from code.
-* **Action:** Established a professional data science directory structure (`code/`, `original_data/`, `cleaned_data/`, `plots/`, `ai_prompts/`).
-* **Action:** Created a `ledger.csv` file to act as an immutable audit log, tracking the status of each pipeline component (Planned vs. Completed).
+## 1. Project Architecture and Pipeline Tracking
+* **Prompt:** "I am starting a machine learning project to cluster global supply chain regimes. What is the industry best practice for structuring my directories to separate raw data, scripts, and visualizations? Additionally, how can I set up a simple `ledger.csv` to track pipeline milestones and prevent scope creep?"
+* **Takeaway:** Understood the importance of isolated data science directories (`code/`, `cleaned_data/`, `plots/`) and successfully implemented an immutable audit log (ledger) to strictly track Planned vs. Completed pipeline components.
 
-## Iteration 02: Real Data Extraction (IMF API v2)
-* **Objective:** Fetch real-world macroeconomic trade data to feed the clustering models.
-* **Action:** Wrote `data_extraction.py` to pull unmanipulated export data from the new IMF API infrastructure.
-* **Critical Fix:** Initially, the script was configured to pull data *only* for the USA. This caused mathematical failures in the machine learning phase (PCA requires more samples than dimensions). The script was refactored to fetch a matrix of 7 major economies (USA, CHN, DEU, JPN, GBR, FRA, IND) and their top trading partners.
+## 2. API Extraction and PCA Dimensionality Rules
+* **Prompt:** "I am fetching trade data using the IMF API v2. However, my PCA dimensionality reduction is failing with an error indicating `n_components` must be between 0 and `min(n_samples, n_features)`. My current script only pulls data for the USA. How should I refactor the code to fetch a matrix of multiple major economies to satisfy PCA's mathematical requirements?"
+* **Takeaway:** Grasped the mathematical relationship between sample size and dimensions in PCA. Successfully scaled the data extraction script to dynamically pull a matrix of 7 major global economies (USA, CHN, DEU, JPN, GBR, FRA, IND).
 
-## Iteration 03: Preprocessing Pipeline
-* **Objective:** Prepare raw data for distance-based machine learning algorithms (K-Means).
-* **Action:** Developed `preprocessing.py` to handle the data transformation.
-* **Techniques Applied:** * Filled missing values (`NaN`) with 0 to prevent algorithmic crashes.
-    * Applied logarithmic transformation (`Log(1+x)`) to compress extreme trade volumes (e.g., billions of dollars vs. thousands of dollars).
-    * Scaled the data using `StandardScaler` to ensure fair feature weighting.
-* **Result:** Successfully reduced the skewness of the export values from `0.22` to `-1.31`, perfectly stabilizing the dataset.
+## 3. Data Preprocessing for Distance-Based ML
+* **Prompt:** "The macroeconomic export data I fetched has extreme outliers (ranging from billions of dollars to a few thousands) and some missing values (`NaN`). What are the optimal preprocessing techniques in `pandas` and `scikit-learn` to stabilize this specific type of highly skewed financial data before feeding it into K-Means?"
+* **Takeaway:** Learned how to safely handle sparsity by filling missing values with zero, and successfully applied logarithmic transformation (`Log(1+x)`) combined with `StandardScaler` to compress extreme trade volumes and remove skewness.
 
-## Iteration 04: Machine Learning (Baseline PCA & K-Means)
-* **Objective:** Reduce dimensionality and cluster the countries into Supply Chain Regimes.
-* **Action:** Created `baseline_kmeans.py`. Decided to use a pure Python script (`.py`) instead of Jupyter Notebook (`.ipynb`) to maintain full automation of the data pipeline.
-* **Debugging History:**
-    1.  **Error:** `n_components=2 must be between 0 and min(n_samples, n_features)=1`
-        * *Cause:* Feature matrix shape was `(1, 45)` because only USA data was processed.
-        * *Fix:* Executed a hard reset on the pipeline, deleted old CSVs, and re-ran the updated `data_extraction.py` to include 7 countries.
-    2.  **Error:** `ModuleNotFoundError: No module named 'code.data_extraction'`
-        * *Cause:* Attempting to use Python `import` statements across pipeline scripts.
-        * *Fix:* Enforced strict pipeline architecture. Scripts must not import each other; they must only communicate by reading/writing CSV files.
-    3.  **Error:** `AttributeError: 'NoneType' object has no attribute 'empty'`
-        * *Cause:* Mixed API extraction logic into the ML script by accident.
-        * *Fix:* Completely wiped `baseline_kmeans.py` and rewrote it to exclusively contain Scikit-Learn logic.
-* **Final Result:** Successfully generated a PCA-reduced scatter plot showing 3 distinct global supply chain regimes:
-    * **Cluster 0 (Purple):** JPN, FRA, GBR, IND (Balanced trade patterns)
-    * **Cluster 1 (Green):** CHN, DEU (Global production/export engines)
-    * **Cluster 2 (Yellow):** USA (Isolated, distinct trade pole)
-* **Refinement:** Corrected the file saving paths so that visualizations are directly routed to the `plots/` directory to maintain structural integrity.
+## 4. Script Isolation and Module Errors
+* **Prompt:** "I am trying to run my `baseline_kmeans.py` script, but I am getting a `ModuleNotFoundError` when it tries to import variables from my `data_extraction.py` script. How can I resolve this dependency issue and enforce a strict, decoupled pipeline architecture where scripts run independently?"
+* **Takeaway:** Grasped the concept of pipeline isolation. Refactored the architecture so that Python scripts do not import each other directly; instead, they communicate exclusively by reading and writing intermediate CSV files to the `cleaned_data/` directory.
 
----
+## 5. Matplotlib Debugging and Geometric Interpretation
+* **Prompt:** "I am plotting silhouette scores to validate my K-Means model, but Matplotlib throws this error: `'Axes' object has no attribute 'setTitle'`. How do I fix this syntax issue? Furthermore, the output shows Germany with a negative silhouette score (-0.1358). How do I interpret this mathematically and economically?"
+* **Takeaway:** Resolved the camelCase vs. snake_case Matplotlib bug (using `set_title()`). Understood how to interpret negative silhouette coefficients as proof of K-Means' "hard boundary flaws," demonstrating that volume-based clustering incorrectly separated Germany from its organic Eurozone ties.
 
-## Current Pipeline Execution Order
-To reproduce the data science pipeline from raw API extraction to final clustering plots, execute the following commands in order:
-
-1. `python code/data_extraction.py`
-2. `python code/preprocessing.py`
-3. `python code/baseline_kmeans.py`
+## 6. Empirical Benchmarking with Cophenetic Correlation
+* **Prompt:** "I am transitioning to Agglomerative Hierarchical Clustering to solve K-Means' spherical limitations. How can I write a Python script that loops through different distance metrics (Euclidean, Manhattan, Cosine) and linkage methods, and uses the Cophenetic Correlation Coefficient ($r$) to empirically evaluate which combination best preserves the original trade topology?"
+* **Takeaway:** Successfully implemented an automated empirical benchmarking matrix. Discovered and documented that Manhattan Distance combined with Average Linkage ($r=0.9015$) handles right-skewed trade volume anomalies vastly better than traditional Euclidean/Ward methods ($r=0.6447$).
