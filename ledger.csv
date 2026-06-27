@@ -1,11 +1,13 @@
-Iteration,Date,Task_Description,Owner,Associated_File,Status
-01,2026-05-25,Repository Setup Folder Framework and Initial README Drafting,Kaan,readme.md,Completed
-02,2026-06-14,IMF DOTS API Integration and Raw Macro Data Fetching,Kaan,"code/data_extraction.py, original_data/imf_dots_sample.csv",Completed
-03,2026-06-14,Missing Value Handling Log Transformation and Scaler Pipeline Design,Kaan,"code/preprocessing.py, imf_dots_cleaned.csv",Completed
-04,2026-06-15,Baseline Model Execution PCA and K-Means Cluster Assignment,Kaan,"code/baseline_kmeans.py, cleaned_data/kmeans_cluster_assignment.csv, plots/kmeans_pca_plot.png",Completed
-05,2026-06-20,Qualitative Assessment of K-Means Geometric and Boundary Flaws,Kaan,"code/evaluate_kmeans.py, plots/kmeans_silhouette_analysis.png, docs/kmeans_critique.md",Completed
-06,2026-06-20,Hierarchical Clustering Distance Metric Justification Matrix,Kaan,"code/distance_justification.py, plots/distance_metric_fidelity.png, docs/distance_metrics.md",Completed
-07,2026-??-??,Agglomerative Hierarchical Clustering Execution and Dendrogram Plotting,?,code/hierarchical.py,Planned
-08,2026-??-??,Dendrogram Parsing for Tax Havens and Hyper-Dependent Supply Nodes,?,docs/outlier_analysis.md,Planned
-09,2026-??-??,V&V Master Data Merging and Cross-Tabulation Alignment Matrix,?,code/validation.py,Planned
-10,2026-??-??,Concept Drift Quantification via ARI and NMI for 2018 and 2022 Cutoffs,?,code/drift_analysis.py,Planned
+Iteration,Date,Task_Description,Associated_File,Status
+01,25-05-2026,Repository Setup Folder Framework and Initial README Drafting,readme.md,Completed
+02,14-06-2026,IMF DOTS API Integration and Raw Macro Data Fetching,"code/data_extraction.py, original_data/imf_dots_sample.csv",Completed
+03,14-06-2026,Missing Value Handling Log Transformation and Scaler Pipeline Design,"code/preprocessing.py, imf_dots_cleaned.csv",Completed
+04,15-06-2026,Baseline Model Execution PCA and K-Means Cluster Assignment,"code/baseline_kmeans.py, cleaned_data/kmeans_cluster_assignment.csv, plots/kmeans_pca_plot.png",Completed
+05,20-06-2026,Qualitative Assessment of K-Means Geometric and Boundary Flaws,"code/evaluate_kmeans.py, plots/kmeans_silhouette_analysis.png, docs/kmeans_critique.md",Completed
+06,20-06-2026,Hierarchical Clustering Distance Metric Justification Matrix,"code/distance_justification.py, plots/distance_metric_fidelity.png, docs/distance_metrics.md",Completed
+07,27-06-2026,Wide-matrix pivot transformation and Manhattan distance Complete Linkage HCA engineering,"code/hierarchical.py, cleaned_data/hierarchical_cluster_assignment.csv",Completed
+08,27-06-2026,Outlier parsing threshold optimization (threshold=0) for structural scale asymmetries,"code/tax_havens_parsing.py, cleaned_data/main_supply_chain_regimes.csv",Completed
+09,27-06-2026,Mapping external risk parameters (V_macro) to trade clusters and calculating regime baselines,"code/vulnerability_alignment.py, cleaned_data/regime_vulnerability_baselines.csv",Completed
+10,27-06-2026,Multi-dimensional structural misalignment mapping utilizing standardized distance from baselines,"code/structural_misalignment.py, cleaned_data/structural_misalignment_results.csv",Completed
+11,27-06-2026,Formulating the Systemic Risk Index (SRI) and applying institutional risk tier tagging,"code/systemic_risk_index.py, cleaned_data/systemic_risk_index_matrix.csv",Completed
+12,27-06-2026,Partitioning historical data cutoffs (2018 vs 2022) for temporal Concept Drift via ARI and NMI,"code/generate_splits.py, splits/split_2018_cutoff.csv, splits/split_2022_cutoff.csv",Completed

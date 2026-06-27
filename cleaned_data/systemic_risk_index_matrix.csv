@@ -1,0 +1,8 @@
+Reporter,Supply_Chain_Regime_ID,Misalignment_Score,Trade_Volume_Weight,SRI_Normalized,Risk_Category
+DEU,2,1.83,0.56,100.0,SYSTEMIC THREAT (Kritik Tehdit)
+FRA,3,1.0,0.61,64.03,HIGH RISK (Yüksek Risk)
+GBR,4,0.6,0.72,51.91,HIGH RISK (Yüksek Risk)
+JPN,6,0.43,0.85,51.87,HIGH RISK (Yüksek Risk)
+CHN,1,0.39,0.56,25.54,MEDIUM RISK (Orta Risk)
+IND,5,0.61,0.25,5.68,LOW RISK (Düşük Risk)
+USA,7,0.67,0.19,0.0,LOW RISK (Düşük Risk)

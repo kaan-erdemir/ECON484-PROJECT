@@ -1,0 +1,8 @@
+Reporter,Supply_Chain_Regime_ID,Debt_to_GDP_Ratio,Base_Debt,Current_Account_to_GDP_Ratio,Base_CA,Sovereign_Credit_Score,Base_Credit,Misalignment_Score
+DEU,2,115.564,115.56,-0.186,-0.19,1,1.0,1.834
+FRA,3,95.879,95.88,1.205,1.2,6,6.0,1.005
+USA,7,35.228,35.23,-5.24,-5.24,7,7.0,0.673
+IND,5,44.042,44.04,4.609,4.61,1,1.0,0.614
+GBR,4,83.879,83.88,-7.732,-7.73,9,9.0,0.603
+JPN,6,44.04,44.04,2.822,2.82,3,3.0,0.429
+CHN,1,63.709,63.71,3.26,3.26,5,5.0,0.388
